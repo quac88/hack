@@ -1,4 +1,3 @@
-import gc
 import cv2
 import numpy as np
 import base64
@@ -7,21 +6,30 @@ from PIL import Image
 import torch
 from segment_anything import SamAutomaticMaskGenerator, sam_model_registry
 
+test = True
 MODEL_TYPE = "vit_b"
 cuda = "cuda:0" if torch.cuda.is_available() else "cpu"
-sam = sam_model_registry[MODEL_TYPE](checkpoint="sam_vit_b.pth")
-sam.to(cuda)
-mask_generator = SamAutomaticMaskGenerator(sam)
+if test:
+    mask_generator = ""
+else:
+    sam = sam_model_registry[MODEL_TYPE](checkpoint="sam_vit_b.pth")
+    sam.to(cuda)
+    mask_generator = SamAutomaticMaskGenerator(sam)
+
 
 def randomize_sigma():
-    _min, _max = 50, 100
+    _min, _max = 1, 25
     # Pick a random sigma between 50 and 100
     sigma = np.random.randint(_min, _max)
-    return sigma 
+    return sigma
 
-def add_gaussian_noise_and_save_dynamic(
-    image_base64, mean=0, save_path="image.png"
-):
+
+def add_gaussian_noise_and_save_dynamic(image_base64, mean=0):
+    if test:
+        # get dynamic.png and return it as base64
+        with open("dynamic.png", "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode()
+
     # Randomize sigma
     sigma = randomize_sigma()
 
@@ -48,25 +56,22 @@ def add_gaussian_noise_and_save_dynamic(
         image_tensor = torch.clamp(image_tensor, 0, 255)
 
     # Convert the image back to CPU and NumPy for saving
-    image_np = image_tensor.to('cpu').numpy().astype(np.uint8)
-    image_pil = Image.fromarray(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
+    image_np = image_tensor.to("cpu").numpy().astype(np.uint8)
+    image_pil = Image.fromarray(image_np)
 
     # Convert PIL image to base64
     buffered = BytesIO()
     image_pil.save(buffered, format="PNG")
 
-    # Clear GPU cache
-    torch.cuda.empty_cache()
-
-    # Optional: Garbage collection
-    gc.collect()
-
     return base64.b64encode(buffered.getvalue()).decode()
 
-def add_gaussian_noise_and_save_static(
-    image_base64, mean=0, save_path="image.png"
-):
-    # Randomize sigma
+
+def add_gaussian_noise_and_save_static(image_base64, mean=0):
+    if test:
+        # get static.png and return it as base64
+        with open("static.png", "rb") as image_file:
+            return base64.b64encode(image_file.read()).decode()
+
     sigma = 1000
 
     # Decode base64 image to NumPy array
@@ -92,18 +97,11 @@ def add_gaussian_noise_and_save_static(
         image_tensor = torch.clamp(image_tensor, 0, 255)
 
     # Convert the image back to CPU and NumPy for saving
-    image_np = image_tensor.to('cpu').numpy().astype(np.uint8)
-    image_pil = Image.fromarray(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
+    image_np = image_tensor.to("cpu").numpy().astype(np.uint8)
+    image_pil = Image.fromarray(image_np)
 
     # Convert PIL image to base64
     buffered = BytesIO()
     image_pil.save(buffered, format="PNG")
 
-    # Clear GPU cache
-    torch.cuda.empty_cache()
-
-    # Optional: Garbage collection
-    gc.collect()
-    
     return base64.b64encode(buffered.getvalue()).decode()
-
