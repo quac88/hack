@@ -1,1 +1,8 @@
-# HACK
+# Problem: 
+Artists are required to display their work in public forums to obtain new customers. Malicious actors take advantage of this and use AI to generate stylistic art based on the artist’s existing work. Artists are not recognized for generated art, and this directly impacts their livelihood.
+
+# What we do: 
+Our product provides a unique algorithm and an intuitive platform for artists to fortify their art from unethical style-copying. Furthermore, by centralizing an art fortification platform, we can provide accessibility while consistently updating our novel algorithms to match AI advances. While our current product caters to visual artists specifically, such a product can also be implemented for use cases like written text. As our product and team continues to expand, we hope to build solutions for all creative professionals.
+
+# What We Do
+In the rapidly advancing age of AI, creative professionals find an imperative need to safeguard their artistic endeavors. Our innovative product stands as a robust guardian, dedicated to preserving the livelihood of artists. By meticulously preventing any non-consensual finetuning for AI, our platform ensures that the integrity and authenticity of their work remain unblemished. In a landscape where technological advancements can pose threats to creative autonomy, our solution serves as a stalwart protector, allowing artists the freedom to express and create without concerns of unwarranted alterations.
