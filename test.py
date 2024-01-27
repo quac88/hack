@@ -23,18 +23,27 @@ def randomize_sigma():
 def add_gaussian_noise_and_save(
     image_base64, mean=0, sigma=1000, save_path="image.png"
 ):
-    # Decode base64 image to cv2.cvtColor
-    image = Image.open(BytesIO(base64.b64decode(image_base64)))
-    # load np array image into cv2
-    image_np = np.array(image)
+    # Decode base64 image to NumPy array
+    image_bytes = base64.b64decode(image_base64)
+    image_np = np.array(Image.open(BytesIO(image_bytes)))
 
     masks = mask_generator.generate(image_np)
     for mask in masks:
-        print(mask["area"])
-        sigma = randomize_sigma()
-        bbox = mask["bbox"]
-        obj = image_np[bbox[1] : bbox[3], bbox[0] : bbox[2]]
-        obj = obj + np.random.normal(mean, sigma, obj.shape)
+        # bool type
+        segment = mask["segmentation"]
+
+        # Convert the image to float for noise addition
+        image_float = image_np.astype(np.float64)
+
+        # Add Gaussian noise only where the mask is True
+        noise = np.random.normal(mean, sigma, image_float.shape)
+        image_float[segment] += noise[segment]
+
+        # Clip the pixel values to be in the valid range [0, 255]
+        image_float = np.clip(image_float, 0, 255)
+
+        # Convert the image back to uint8
+        image_np = image_float.astype(np.uint8)
 
     # Save the noisy image to the local filesystem
     cv2.imwrite(save_path, cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
