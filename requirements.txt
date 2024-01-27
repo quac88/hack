@@ -5,3 +5,4 @@ torch
 Flask
 flask-cors
 segment_anything
+torchvision
