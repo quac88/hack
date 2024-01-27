@@ -16,7 +16,7 @@ def randomize_sigma():
     _min, _max = 50, 100
     # Pick a random sigma between 50 and 100
     sigma = np.random.randint(_min, _max)
-    return sigma  # Fixed to return a random value
+    return 1000 
 
 def add_gaussian_noise_and_save(
     image_base64, mean=0, sigma=1000, save_path="image.png"
