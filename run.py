@@ -94,3 +94,8 @@ def add_gaussian_noise_and_save_static(
     
     return base64.b64encode(buffered.getvalue()).decode()
 
+with open("base64.txt", "r") as f:
+    your_image_base64_data = f.read()
+    new_b64 = add_gaussian_noise_and_save_dynamic(your_image_base64_data)
+    print(new_b64[:100])
+
