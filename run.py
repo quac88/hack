@@ -48,11 +48,13 @@ def add_gaussian_noise_and_save_dynamic(
 
     # Convert the image back to CPU and NumPy for saving
     image_np = image_tensor.to('cpu').numpy().astype(np.uint8)
+    image_pil = Image.fromarray(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
-    # Save the noisy image to the local filesystem
-    cv2.imwrite(save_path, cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
+    # Convert PIL image to base64
+    buffered = BytesIO()
+    image_pil.save(buffered, format="PNG")
 
-    return save_path
+    return base64.b64encode(buffered.getvalue()).decode()
 
 def add_gaussian_noise_and_save_static(
     image_base64, mean=0, save_path="image.png"
@@ -84,9 +86,11 @@ def add_gaussian_noise_and_save_static(
 
     # Convert the image back to CPU and NumPy for saving
     image_np = image_tensor.to('cpu').numpy().astype(np.uint8)
+    image_pil = Image.fromarray(cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
-    # Save the noisy image to the local filesystem
-    cv2.imwrite(save_path, cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
-
-    return save_path
+    # Convert PIL image to base64
+    buffered = BytesIO()
+    image_pil.save(buffered, format="PNG")
+    
+    return base64.b64encode(buffered.getvalue()).decode()
 
