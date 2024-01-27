@@ -1,3 +1,4 @@
+import gc
 import cv2
 import numpy as np
 import base64
@@ -54,6 +55,12 @@ def add_gaussian_noise_and_save_dynamic(
     buffered = BytesIO()
     image_pil.save(buffered, format="PNG")
 
+    # Clear GPU cache
+    torch.cuda.empty_cache()
+
+    # Optional: Garbage collection
+    gc.collect()
+
     return base64.b64encode(buffered.getvalue()).decode()
 
 def add_gaussian_noise_and_save_static(
@@ -91,11 +98,12 @@ def add_gaussian_noise_and_save_static(
     # Convert PIL image to base64
     buffered = BytesIO()
     image_pil.save(buffered, format="PNG")
+
+    # Clear GPU cache
+    torch.cuda.empty_cache()
+
+    # Optional: Garbage collection
+    gc.collect()
     
     return base64.b64encode(buffered.getvalue()).decode()
-
-with open("base64.txt", "r") as f:
-    your_image_base64_data = f.read()
-    new_b64 = add_gaussian_noise_and_save_dynamic(your_image_base64_data)
-    print(new_b64[:100])
 
