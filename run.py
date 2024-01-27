@@ -19,8 +19,11 @@ def randomize_sigma():
     return sigma 
 
 def add_gaussian_noise_and_save(
-    image_base64, mean=0, sigma=1000, save_path="image.png"
+    image_base64, mean=0, save_path="image.png"
 ):
+    # Randomize sigma
+    sigma = randomize_sigma()
+    
     # Decode base64 image to NumPy array
     image_bytes = base64.b64decode(image_base64)
     image_pil = Image.open(BytesIO(image_bytes))
@@ -50,12 +53,3 @@ def add_gaussian_noise_and_save(
     cv2.imwrite(save_path, cv2.cvtColor(image_np, cv2.COLOR_RGB2BGR))
 
     return save_path
-
-# Example usage
-# Replace 'your_image_base64_data' with the actual base64 encoded image data
-with open("base64.txt", "r") as f:
-    your_image_base64_data = f.read()
-saved_path = add_gaussian_noise_and_save(your_image_base64_data)
-
-# 'saved_path' now contains the path where the noisy image is saved
-print(f"Noisy image saved to: {saved_path}")
