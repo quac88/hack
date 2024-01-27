@@ -2,3 +2,5 @@ opencv-python
 numpy
 Pillow
 torch
+Flask
+flask-cors
