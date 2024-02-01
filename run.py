@@ -103,5 +103,6 @@ def add_gaussian_noise_and_save_static(image_base64, mean=0):
     # Convert PIL image to base64
     buffered = BytesIO()
     image_pil.save(buffered, format="PNG")
-
+    
     return base64.b64encode(buffered.getvalue()).decode()
+
